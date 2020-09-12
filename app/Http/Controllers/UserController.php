@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -9,16 +10,32 @@ class UserController extends Controller
     //
     public function index()
     {
-        # code...
+        //consulta todos los usuarios de la base de datos
+        $users = User::latest()->get();
+        //envia el resultado a la vista users
+        return view('users.index', [
+            'users' => $users
+        ] );
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        # code...
+        //crea un usuario con los siguientes datos
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
+        //retorna a la vista anterior
+        return back();
     }
 
-    public function delete()
+    public function destroy(User $user)
     {
-        # code...
+        //Recibe como parametro la informacion del usuario 
+        //si lo encuentra lo elimina
+        $user->delete();
+        //retorna a la vista anterior
+        return back();
     }
 }
