@@ -20,11 +20,18 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        //valida los datos
+        $request->validate([
+            'name' =>       ['required'],
+            'email' =>      ['required', 'email', 'unique:users'],
+            'password' =>   ['required', 'min:8']
+        ]);
+
         //crea un usuario con los siguientes datos
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => bcrypt($request->password),
         ]);
         //retorna a la vista anterior
         return back();
